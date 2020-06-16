@@ -1,6 +1,7 @@
 import gzip
 import shutil
 import pandas as pd
+# import srtm
 
 class utils:
     def save_csv(self, dataframe, name):
@@ -19,6 +20,12 @@ class utils:
         dataframe = dataframe[['ts_local','lat6','lon6','tide5','month','hour_of_week','dev_count','rq_count','province']]
         return dataframe
 
+    def get_elevation(self, latitude, longitude):
+        # elevation_data = srtm.get_data(local_cache_dir="tmp_cache")
+        elevation = elevation_data.get_elevation(latitude, longitude)
+        print('CGN Airport elevation (meters):', elevation)
+
+        return elevation
 
 if __name__ == '__main__':
     # File name is filename with .csv.gz as extension

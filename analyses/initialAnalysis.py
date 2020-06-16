@@ -27,21 +27,21 @@ class commonAnalysis:
         # df_group_day_reg['day'] = df_group_day_reg.index['day']
         # df_group_day_reg['tide5'] = df_group_day_reg.index['tide5']
         
-        print df_group_day_reg.dtypes,'\n', df_group_day_reg.head(10)
+        print (df_group_day_reg.dtypes,'\n', df_group_day_reg.head(10))
         df_day_reg_devCount = df_group_day_reg[['day', 'tide5', 'dev_count']]
         df_day_reg = df_day_reg_devCount.pivot(index = 'day', columns = 'tide5', values = 'dev_count').reset_index()
         df_day_reg.plot()
         plt.savefig('dev_count_ts_region.png')
 
     def aggregate_by_num_hours(self, dataframe, numOfHours):
-        print dataframe.describe()
+        print (dataframe.describe())
         df_hours = dataframe.groupby([dataframe['ts_local'].dt.hour // numOfHours,\
             dataframe['ts_local'].dt.date,\
                 'lat6', 'lon6']).sum()
         df_hours.index.names = [str(numOfHours) + '_hourBin', 'ts_date', 'lat6', 'lon6']
         df_hours = df_hours.reset_index()
-        print df_hours.head(30)
-        print df_hours.describe()
+        print (df_hours.head(30))
+        print (df_hours.describe())
         return df_hours
 
     def filter_by_provinces(self, dataframe, provinces):
@@ -52,12 +52,12 @@ class commonAnalysis:
         return df_provinces
 
     def cal_basic_parameters_regionwise(self, dataframe):
-        dataframe = dataframe[['tide5','dev_count','rq_count']]
-        df_params = dataframe.groupby('tide5')\
+        dataframe = dataframe[['tide5', 'lat6', 'lon6','dev_count','rq_count']]
+        df_params = dataframe.groupby(['tide5', 'lat6', 'lon6'])\
             .agg({'dev_count':['mean', 'max', 'min', 'std', 'count'],\
             'rq_count':['mean', 'max', 'min', 'std', 'count']})
         
-        print df_params.head()
+        print (df_params.head())
 
         return df_params.reset_index()
 

@@ -1,4 +1,8 @@
 **/data
 *.pyc
-**/figures
-**/results
+.vscode/*
+*.tar
+*.zip
+*.swp
+*.csv
+*.png
