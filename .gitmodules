@@ -1,0 +1,3 @@
+[submodule "srtm.py"]
+	path = srtm.py
+	url = https://github.com/tkrajina/srtm.py
