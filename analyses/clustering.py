@@ -9,7 +9,7 @@ from sklearn import preprocessing
 from sklearn.metrics import silhouette_score, silhouette_samples
 
 class kmeans:
-    def __init__(self, dataset = None, n_cluster = [2, 3, 4, 5, 6], startTime = time.time()):
+    def __init__(self, dataset = None, n_cluster = [2, 3], startTime = time.time()):
         self.dataset = dataset
         self.n_cluster = n_cluster
         self.startTime = startTime
@@ -26,7 +26,10 @@ class kmeans:
 
         for n_clusters in range_n_clusters:
             start = time.time()
+            now = datetime.datetime.now()
             print('\nStarting n_cluster = ', n_clusters, ' at ', datetime.datetime.now())
+            suffix = '_' + str(n_clusters) + '_' + str(now.month).zfill(2) + str(now.day).zfill(2) +\
+                     '_' + str(now.hour).zfill(2)
             fig, (ax1, ax2) = plt.subplots(1,2)
             fig.set_size_inches(12, 5)
 
@@ -35,8 +38,15 @@ class kmeans:
 
             clusterer = KMeans(n_clusters = n_clusters, random_state=10)
             cluster_labels = clusterer.fit_predict(principalDf)
-
+            # print(cluster_labels)
             silhouette_avg = silhouette_score(principalDf, cluster_labels)
+            clusterDf = principalDf
+            clusterDf['cluster'] = cluster_labels
+            clusterDf['lat6'] = self.dataset['lat6']
+            clusterDf['lon6'] = self.dataset['lon6']
+            # print(clusterDf.head())
+            clusterDf.to_csv('results/cluster_df' + suffix + '.csv')
+
             print("For n_clusters =", n_clusters,
                 "The average silhouette_score is :", silhouette_avg)
             print("Clustering completed at: ", datetime.datetime.now())
@@ -100,9 +110,8 @@ class kmeans:
                         fontsize=14, fontweight='bold')
         #     plt.tight_layout()
             # plt.show()
-            now = datetime.datetime.now()
-            plotname = 'silhoutte_n_' + str(n_clusters) + '_' + str(now.month).zfill(2) + \
-                       str(now.day).zfill(2) + str(now.hour).zfill(2)
+            # now = datetime.datetime.now()
+            plotname = 'silhoutte_n' + suffix
             plt.savefig('figures/' + plotname + '.png')
 
             end = time.time()
