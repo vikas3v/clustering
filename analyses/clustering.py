@@ -23,6 +23,7 @@ class kmeans:
         print('IsNan: ', np.any(np.isnan(principalDf)))
         print('IsFinite: ', np.all(np.isfinite(principalDf)))
         range_n_clusters = self.n_cluster
+        now = datetime.datetime.now()
 
         for n_clusters in range_n_clusters:
             start = time.time()
@@ -119,7 +120,7 @@ class kmeans:
             minutes, seconds = divmod(rem, 60)
             print('Time taken for cluster ', n_clusters, ": {:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
 
-    def read_before_after_elevation_data(self, filepath = 'results/before_after_wElevation_sample.csv'): #data/before_after_wElevation.csv'): #
+    def read_before_after_elevation_data(self, filepath = 'data/before_after_wElevation.csv'): #results/before_after_wElevation_sample.csv'): #
         df = pd.read_csv(filepath)
 
         # print(df.columns)
