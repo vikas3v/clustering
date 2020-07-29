@@ -1,8 +1,5 @@
-**/data
 *.pyc
 .vscode/*
 *.tar
 *.zip
 *.swp
-*.csv
-*.png
