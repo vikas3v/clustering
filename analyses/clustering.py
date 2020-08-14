@@ -147,20 +147,60 @@ class kmeans:
         self.dataset = df_normal
         return df
     
-    def save_sample_data(self, filepath = 'data/before_after_wElevation.csv'):
+    def save_sample_data(self, filepath = 'data/cluster_df_3_0624_18.csv'):
         df = pd.read_csv(filepath)
         df_sample = df.head(10000)
         df_sample.to_csv('results/before_after_wElevation_sample.csv')
 
+    def hist_cludters(self, filepath = 'results/cluster_df_dev_3_0624_18.csv'):
+        df_cluster = pd.read_csv(filepath)
+        print(df_cluster.head())
+        clstr0_df = df_cluster[df_cluster['cluster'] == 0]
+        clstr1_df = df_cluster[df_cluster['cluster'] == 1]
+        clstr2_df = df_cluster[df_cluster['cluster'] == 2]
+        
+        clstr0_chng = clstr0_df.dev_count_norm
+        clstr1_chng = clstr1_df.dev_count_norm
+        clstr2_chng = clstr2_df.dev_count_norm
+        # plt.hist(clstr0_chng, bins=100, alpha=0.5, label="Change in Device mean for cluster 0", color='red')
+        # plt.hist(clstr1_chng, bins=100, alpha=0.5, label="Change in Device mean for cluster 1", color='blue')
+        plt.hist(clstr2_chng, bins=100, alpha=0.5, label="Change in Device mean for cluster 2",color='green')
+
+        plt.xlabel("Change in device count normalized", size=14)
+        plt.ylabel("Count", size=14)
+        plt.title("Distribution of the change in device count for different clusters")
+        plt.legend(loc='upper right')
+        plt.savefig("figures/hist_cludters_dev_count_3_2.png")
+
+    def hist_cludters_dev(self, filepath = 'results/clstr_df_dev_3_0701_17.csv'):
+        df_cluster = pd.read_csv(filepath)
+        print(df_cluster.head())
+        clstr0_df = df_cluster[df_cluster['cluster'] == 0]
+        clstr1_df = df_cluster[df_cluster['cluster'] == 1]
+        clstr2_df = df_cluster[df_cluster['cluster'] == 2]
+        
+        clstr0_chng = clstr0_df.dev_mean_a_norm - clstr0_df.dev_mean_b_norm
+        clstr1_chng = clstr1_df.dev_mean_a_norm - clstr1_df.dev_mean_b_norm
+        clstr2_chng = clstr2_df.dev_mean_a_norm - clstr2_df.dev_mean_b_norm
+        plt.hist(clstr0_chng, bins=100, alpha=0.5, label="Change in Device mean for cluster 0", color='red')
+        # plt.hist(clstr1_chng, bins=100, alpha=0.5, label="Change in Device mean for cluster 1", color='blue')
+        # plt.hist(clstr2_chng, bins=100, alpha=1, label="Change in Device mean for cluster 2",color='green')
+
+        plt.xlabel("Change in device count normalized", size=14)
+        plt.ylabel("Count", size=14)
+        plt.title("Distribution of the change in device count for different clusters")
+        plt.legend(loc='upper right')
+        plt.savefig("figures/hist_cludters_dev_count_3_0.png")
 
 if __name__ == '__main__':
     clstr = kmeans()
     # clstr.save_sample_data()
-    clstr.read_before_after_elevation_data()
-    clstr.kmean_bef_after()
-    start = clstr.startTime
-    end = time.time()
-    hours, rem = divmod(end-start, 3600)
-    minutes, seconds = divmod(rem, 60)
-    print("Total time taken: {:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
-
+    # clstr.read_before_after_elevation_data()
+    # clstr.kmean_bef_after()
+    # start = clstr.startTime
+    # end = time.time()
+    # hours, rem = divmod(end-start, 3600)
+    # minutes, seconds = divmod(rem, 60)
+    # print("Total time taken: {:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
+    # clstr.hist_cludters()
+    clstr.hist_cludters_dev()
