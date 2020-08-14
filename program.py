@@ -175,7 +175,7 @@ class program:
 
 if __name__ == '__main__':
     pgm = program()
-    # pgm.read_test_data()
+    pgm.read_test_data()
     # pgm.read_full_data()
     # pgm.timeseries_all_days()
     # pgm.filter_for_jakarta()
