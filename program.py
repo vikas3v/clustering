@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import matplotlib.transforms as mtransforms
+# import seaborn as sns
 # import srtm
 
 class program:
@@ -42,7 +43,13 @@ class program:
             'rq_mean_after', 'rq_max_after', 'rq_min_after', 'rq_std_after', 'rq_count_after']
         # print df_combined.columns
         print(df_combined.head())
-        self.util.save_csv(df_combined, 'df_bef_after_tide5_std_avg_test')
+        self.util.save_csv(df_combined, 'df_bef_after_tide5_std_avg_06_22')
+
+        df_baseline = df_combined
+        # print (df_baseline.shape)
+        df_bl_filter = df_baseline[df_baseline['dev_count_before'] > 5]
+        df_bl_filter = df_bl_filter[df_bl_filter['dev_count_after'] > 5]
+        self.util.save_csv(df_combined, 'df_bef_after_tide5_std_avg_count_5_filter_06_22')
 
         return df_combined
 
@@ -61,6 +68,54 @@ class program:
         x2 = df_baseline.dev_std_before
         y2 =  df_baseline.dev_std_after
         self.comparison_plot(x2, y2, 'dev_std_bef_ater_filter02')
+
+    def baseline_comparison_excl_outlier(self, baselinePath = 'results/df_bef_after_tide5_std_avg_06_22.csv'):
+        df_baseline = pd.read_csv(baselinePath)
+        print (df_baseline.shape)
+        df_bl_filter = df_baseline[df_baseline['dev_count_before'] > 5]
+        df_bl_filter = df_bl_filter[df_bl_filter['dev_count_after'] > 5]
+        print (df_bl_filter.shape)
+
+        df_bl_filter = df_bl_filter[df_bl_filter['dev_mean_before'] < 100]
+
+        print (df_bl_filter.shape)
+        # df_avg = df_baseline[['dev_mean_before','dev_mean_after']]
+        x1 = df_baseline.dev_mean_before
+        y1 =  df_baseline.dev_mean_after
+        self.comparison_plot(x1, y1, 'dev_mean_bef_ater_excl_outlier')
+
+        x2 = df_baseline.dev_std_before
+        y2 =  df_baseline.dev_std_after
+        self.comparison_plot(x2, y2, 'dev_std_bef_ater_excl_outlier')
+
+    def histogram_bef_aft_dev_counts(self, baselinePath = 'results/df_bef_after_tide5_std_avg_06_22.csv'):
+        df_baseline = pd.read_csv(baselinePath)
+        df_bl_filter = df_baseline[df_baseline['dev_count_before'] >50]
+        df_bl_filter = df_bl_filter[df_bl_filter['dev_count_after'] >50]
+        plt.figure(figsize=(8,6))
+        plt.hist(df_bl_filter.dev_count_before, bins=100, alpha=0.5, label="Device count before the floods")
+        plt.hist(df_bl_filter.dev_count_after, bins=100, alpha=0.5, label="Device count after the floods")
+
+        plt.xlabel("Number of times device count of a tile is recorded in the dataset", size=14)
+        plt.ylabel("Number of tiles", size=14)
+        plt.title("Distribution of the number of entries for each tile")
+        plt.legend(loc='upper right')
+        plt.savefig("figures/histogram_dev_ount_bef_aft_great50.png")
+
+    def histogram_change_dev_counts(self, baselinePath = 'results/df_bef_after_tide5_std_avg_06_22.csv'):
+        df_baseline = pd.read_csv(baselinePath)
+        # df_bl_filter = df_baseline[df_baseline['dev_count_before'] >50]
+        # df_bl_filter = df_bl_filter[df_bl_filter['dev_count_after'] >50]
+        plt.figure(figsize=(8,6))
+        without_zero = df_baseline.dev_mean_before - df_baseline.dev_mean_after
+        # without_zero = without_zero[without_zero!=0]
+        plt.hist(without_zero, bins=100, alpha=1, label="Change in Device mean before and after the floods")
+
+        plt.xlabel("Number of times device count of a tile is recorded in the dataset", size=14)
+        plt.ylabel("Number of tiles", size=14)
+        plt.title("Distribution of the number of entries for each tile")
+        plt.legend(loc='upper right')
+        plt.savefig("figures/histogram_dev_mean_change.png")
 
     def comparison_plot(self, x, y, figName):
         lineStart = x.min() 
@@ -121,7 +176,7 @@ class program:
 if __name__ == '__main__':
     pgm = program()
     # pgm.read_test_data()
-    pgm.read_full_data()
+    # pgm.read_full_data()
     # pgm.timeseries_all_days()
     # pgm.filter_for_jakarta()
     # pgm.aggregate_dataset()
@@ -129,3 +184,6 @@ if __name__ == '__main__':
     # pgm.baseline_comparison()
     # pgm.bl_quantitative()
     # pgm.bl_elevation()
+    # pgm.baseline_comparison_excl_outlier()
+    pgm.histogram_change_dev_counts()
+
