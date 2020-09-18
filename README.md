@@ -1,7 +1,7 @@
-# Skyhook Clustering Analysis
+# Clustering Analysis on internet endpoint data
 ## Introduction
 This repository contains the code to perform K-means clustering and other exploratory analyses on
- aggregated internet endpoint data from [Skyhook](https://www.skyhook.com/). Skyhook's proprietary software provides the ability 
+ aggregated internet endpoint data. The proprietary data provides the ability 
  to locate connected devices and requests in any environment across the globe. The data used for this 
  analysis summarizes the number of devices and requests within each 100m x 100m tile across 3 
  provinces of Indonesia from Dec 2019 to Jan 2020. This data was analyzed to find trends and anomalies
